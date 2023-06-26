@@ -17,7 +17,7 @@ The implementation further leverages [MPI](https://github.com/JuliaParallel/MPI.
 
 The SpinMC.jl package can be installed by invoking the following command in the Julia REPL:
 ```julia
-] add https://github.com/fbuessen/SpinMC.jl
+] add https://github.com/sreekar-voleti/SpinMC_more.jl
 ```
 
 ## Define a lattice spin model
