@@ -1,3 +1,5 @@
+NOTE: This repo is a fork of [SpinMC.jl](https://github.com/fbuessen/SpinMC.jl), and is includes extra functionalities as outlined below.
+
 ![SpinMC.jl](doc/src/assets/logo.png)
 
 [![](https://github.com/fbuessen/SpinMC.jl/actions/workflows/runtests.yml/badge.svg)](https://github.com/fbuessen/SpinMC.jl/actions/workflows/runtests.yml)
