@@ -1,6 +1,6 @@
-name = "SpinMC_more"
+name = "SpinMC_more_more"
 uuid = "035817ae-e0ef-11ec-0b3d-e1e1094fb5f5"
-authors = ["Sreekar Voleti <sreekar.voleti@mail.utoronto.ca>"]
+authors = ["Tanmay Grover <tanmay.grover@mail.utoronto.ca>"]
 version = "0.1.1"
 
 [deps]
