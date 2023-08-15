@@ -54,7 +54,7 @@ function MonteCarlo(
     return mc
 end
 
-function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) where T<:Lattice
+function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, disableOutput::Bool = false) where T<:Lattice
     #init MPI
     rank = 0
     commSize = 1
@@ -80,14 +80,12 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) where T
     end
     
     #init spin configuration
-    if mc.rewrite == true
-        if mc.sweep == 0
-            for i in 1:length(mc.lattice)
-                setSpin!(mc.lattice, i, uniformOnSphere(mc.rng))
-            end
+    if mc.sweep == 0 && mc.rewrite 
+        for i in 1:length(mc.lattice)
+            setSpin!(mc.lattice, i, uniformOnSphere(mc.rng))
         end
     end
-
+    
     #init Monte Carlo run
     totalSweeps = mc.thermalizationSweeps + mc.measurementSweeps
     partnerSpinConfiguration = deepcopy(mc.lattice.spins)
@@ -96,7 +94,7 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) where T
     #launch Monte Carlo run
     lastCheckpointTime = time()
     statistics = MonteCarloStatistics()
-    rank == 0 && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+    rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
 
     while mc.sweep < totalSweeps
         energyStore!(mc.observables,mc.lattice,energy)
@@ -229,6 +227,6 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) where T
     end
     
     #return
-    rank == 0 && @printf("Simulation finished on %s.\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+    rank == 0 && !disableOutput && @printf("Simulation finished on %s.\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
     return nothing    
 end
