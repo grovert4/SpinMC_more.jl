@@ -12,7 +12,7 @@ include("Spin.jl")
 export getEnergy, getMagnetization, getCorrelation, energyStore!
 
 include("MonteCarlo.jl")
-export MonteCarlo, run!
+export MonteCarlo, run!, run_nompi!
 
 include("Helper.jl")
 include("IO.jl")
