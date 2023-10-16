@@ -230,7 +230,7 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, disable
     rank == 0 && !disableOutput && @printf("Simulation finished on %s.\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
     return nothing    
 end
-function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) where T<:Lattice
+function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, disableOutput = false) where T<:Lattice
     #init MPI
     rank = 0
     commSize = 1
@@ -390,7 +390,7 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) w
             if checkpointPending
                 writeMonteCarlo(outfile, mc)
                 lastCheckpointTime = time()
-                rank == 0 && @printf("Checkpoint written on %s.\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+                rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
             end
         end
     end
@@ -398,10 +398,10 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing) w
     #write final checkpoint
     if enableOutput
         writeMonteCarlo(outfile, mc)
-        rank == 0 && @printf("Checkpoint written on %s.\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+        rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
     end
     
     #return
-    rank == 0 && @printf("Simulation finished on %s.\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+    rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
     return nothing    
 end
