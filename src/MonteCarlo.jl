@@ -271,7 +271,7 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, d
     #launch Monte Carlo run
     lastCheckpointTime = time()
     statistics = MonteCarloStatistics()
-    rank == 0 && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+    rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
 
     while mc.sweep < totalSweeps
         #perform local sweep
