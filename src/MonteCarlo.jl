@@ -257,7 +257,7 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, d
     # end
     
     #init spin configuration
-    if mc.sweep == 0
+    if mc.sweep == 0 && mc.rewrite 
         for i in 1:length(mc.lattice)
             setSpin!(mc.lattice, i, uniformOnSphere(mc.rng))
         end
