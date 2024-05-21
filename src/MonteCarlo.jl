@@ -271,7 +271,7 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, d
     #launch Monte Carlo run
     lastCheckpointTime = time()
     statistics = MonteCarloStatistics()
-    rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+    # rank == 0 && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
 
     while mc.sweep < totalSweeps
         #perform local sweep
@@ -348,15 +348,15 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, d
             eta = (totalSweeps - mc.sweep) / sweeprate
 
             localUpdateAcceptanceRate = 100.0 * statistics.acceptedLocalUpdates / statistics.attemptedLocalUpdates
-            if enableMPI
-                replicaExchangeAcceptanceRate = 100.0 * statistics.acceptedReplicaExchanges / statistics.attemptedReplicaExchanges
-                allLocalAppectanceRate = zeros(commSize)
-                allLocalAppectanceRate[rank + 1] = localUpdateAcceptanceRate
-                MPI.Allgather!(UBuffer(allLocalAppectanceRate, 1), MPI.COMM_WORLD)
-                allReplicaExchangeAcceptanceRate = zeros(commSize)
-                allReplicaExchangeAcceptanceRate[rank + 1] = replicaExchangeAcceptanceRate
-                MPI.Allgather!(UBuffer(allReplicaExchangeAcceptanceRate, 1), MPI.COMM_WORLD)
-            end
+            # if enableMPI
+            #     replicaExchangeAcceptanceRate = 100.0 * statistics.acceptedReplicaExchanges / statistics.attemptedReplicaExchanges
+            #     allLocalAppectanceRate = zeros(commSize)
+            #     allLocalAppectanceRate[rank + 1] = localUpdateAcceptanceRate
+            #     MPI.Allgather!(UBuffer(allLocalAppectanceRate, 1), MPI.COMM_WORLD)
+            #     allReplicaExchangeAcceptanceRate = zeros(commSize)
+            #     allReplicaExchangeAcceptanceRate[rank + 1] = replicaExchangeAcceptanceRate
+            #     MPI.Allgather!(UBuffer(allReplicaExchangeAcceptanceRate, 1), MPI.COMM_WORLD)
+            # end
 
             #print statistics
             if rank == 0
@@ -384,15 +384,15 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, d
         end
 
         #write checkpoint
-        if enableOutput
-            checkpointPending = time() - lastCheckpointTime >= mc.checkpointInterval
-            enableMPI && (checkpointPending = MPIBcastBool(checkpointPending, 0, MPI.COMM_WORLD))
-            if checkpointPending
-                writeMonteCarlo(outfile, mc)
-                lastCheckpointTime = time()
-                rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
-            end
-        end
+        # if enableOutput
+        #     checkpointPending = time() - lastCheckpointTime >= mc.checkpointInterval
+        #     # enableMPI && (checkpointPending = MPIBcastBool(checkpointPending, 0, MPI.COMM_WORLD))
+        #     if checkpointPending
+        #         writeMonteCarlo(outfile, mc)
+        #         lastCheckpointTime = time()
+        #         rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+        #     end
+        # end
     end
 
     #write final checkpoint
@@ -402,6 +402,6 @@ function run_nompi!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, d
     end
     
     #return
-    rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
+    # rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
     return nothing    
 end
