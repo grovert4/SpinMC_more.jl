@@ -68,7 +68,7 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, disable
             allBetas[rank + 1] = mc.beta
             MPI.Allgather!(UBuffer(allBetas, 1), MPI.COMM_WORLD)
             enableMPI = true
-            rank == 0 && @printf("MPI detected. Enabling replica exchanges across %d simulations.\n", commSize)
+            rank == 0 && !disableOutput && @printf("MPI detected. Enabling replica exchanges across %d simulations.\n", commSize)
         end
     end
 
