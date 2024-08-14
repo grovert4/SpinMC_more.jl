@@ -33,7 +33,7 @@ mutable struct MonteCarlo{T<:Lattice,U<:AbstractRNG}
 
     rewrite::Bool
 
-    saveEnergy:Bool
+    saveEnergy::Bool
 end
 
 function MonteCarlo(
