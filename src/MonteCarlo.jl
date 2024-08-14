@@ -100,7 +100,7 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, disable
     rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
 
     while mc.sweep < totalSweeps
-        if saveEnergy
+        if mc.saveEnergy
             energyStore!(mc.observables,mc.lattice,energy)
         end 
         #perform local sweep
