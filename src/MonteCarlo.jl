@@ -48,7 +48,7 @@ function MonteCarlo(
     rng::U = copy(Random.GLOBAL_RNG), 
     seed::UInt = rand(Random.RandomDevice(),UInt),
     rewrite::Bool = true,
-    saveEnergy::Bool = false,
+    saveEnergy::Bool = false
     ) where T<:Lattice where U<:AbstractRNG
 
     mc = MonteCarlo(deepcopy(lattice), beta, thermalizationSweeps, measurementSweeps, measurementRate, replicaExchangeRate, reportInterval, checkpointInterval, rng, seed, 0, Observables(lattice), rewrite, saveEnergy)
