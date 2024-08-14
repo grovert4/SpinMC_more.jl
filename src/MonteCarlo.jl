@@ -32,6 +32,8 @@ mutable struct MonteCarlo{T<:Lattice,U<:AbstractRNG}
     observables::Observables
 
     rewrite::Bool
+
+    saveEnergy:Bool
 end
 
 function MonteCarlo(
@@ -45,10 +47,11 @@ function MonteCarlo(
     checkpointInterval::Int = 3600, 
     rng::U = copy(Random.GLOBAL_RNG), 
     seed::UInt = rand(Random.RandomDevice(),UInt),
-    rewrite::Bool = true
+    rewrite::Bool = true,
+    saveEnergy::Bool = false,
     ) where T<:Lattice where U<:AbstractRNG
 
-    mc = MonteCarlo(deepcopy(lattice), beta, thermalizationSweeps, measurementSweeps, measurementRate, replicaExchangeRate, reportInterval, checkpointInterval, rng, seed, 0, Observables(lattice), rewrite)
+    mc = MonteCarlo(deepcopy(lattice), beta, thermalizationSweeps, measurementSweeps, measurementRate, replicaExchangeRate, reportInterval, checkpointInterval, rng, seed, 0, Observables(lattice), rewrite, saveEnergy)
     Random.seed!(mc.rng, mc.seed)
     
     return mc
@@ -97,8 +100,9 @@ function run!(mc::MonteCarlo{T}; outfile::Union{String,Nothing}=nothing, disable
     rank == 0 && !disableOutput && @printf("Simulation started on %s.\n\n", Dates.format(Dates.now(), "dd u yyyy HH:MM:SS"))
 
     while mc.sweep < totalSweeps
-        energyStore!(mc.observables,mc.lattice,energy)
-
+        if saveEnergy
+            energyStore!(mc.observables,mc.lattice,energy)
+        end 
         #perform local sweep
         for i in 1:length(mc.lattice)
             #select random spin
